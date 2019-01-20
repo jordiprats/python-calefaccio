@@ -8,9 +8,7 @@ class Calefaccio:
         self.gpio.off()
 
     def on():
-        global calefaccio
         self.gpio.off()
 
     def off():
-        global calefaccio
         self.gpio.on()
