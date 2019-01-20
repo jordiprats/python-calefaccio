@@ -4,17 +4,17 @@ import calefaccio
 import datetime, time
 
 timeformat = '%Y%-m-%d %H:%M:%S'
-calefaccio = calefaccio.Calefaccio()
+global_calefaccio = calefaccio.Calefaccio()
 
 def start_calefaccio():
     global calefaccio
     print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" START"
-    calefaccio.on()
+    global_calefaccio.on()
 
 def stop_calefaccio():
     global calefaccio
     print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" STOP"
-    calefaccio.off()
+    global_calefaccio.off()
 
 schedule.every().day.at("00:00").do(stop_calefaccio)
 schedule.every().day.at("04:00").do(start_calefaccio)
