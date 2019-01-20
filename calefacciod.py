@@ -18,9 +18,6 @@ schedule.every().day.at("04:00").do(start_calefaccio)
 
 calefaccio.init()
 
-stop_calefaccio()
-start_calefaccio()
-
 while True:
     schedule.run_pending()
     time.sleep(1)
