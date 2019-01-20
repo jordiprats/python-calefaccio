@@ -15,10 +15,10 @@ def stop_calefaccio():
 
 schedule.every().day.at("00:00").do(stop_calefaccio)
 schedule.every().day.at("04:00").do(start_calefaccio)
-# demo
-schedule.every(1).minutes.do(stop_calefaccio)
 
 calefaccio.init()
+
+stop_calefaccio()
 
 while True:
     schedule.run_pending()
