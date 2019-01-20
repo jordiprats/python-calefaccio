@@ -3,7 +3,7 @@ import time
 import calefaccio
 import datetime, time
 
-timeformat = '%Y%-m-%d %H:%M:%S'
+timeformat = '%Y-%m-%d %H:%M:%S'
 
 def start_calefaccio():
     print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" START"
