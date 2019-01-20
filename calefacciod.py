@@ -7,10 +7,12 @@ timeformat = '%Y%-m-%d %H:%M:%S'
 calefaccio = calefaccio.Calefaccio()
 
 def start_calefaccio():
+    global calefaccio
     print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" START"
     calefaccio.on()
 
 def stop_calefaccio():
+    global calefaccio
     print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" STOP"
     calefaccio.off()
 
