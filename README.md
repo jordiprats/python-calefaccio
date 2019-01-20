@@ -2,6 +2,8 @@
 
 ## base setup
 
+No es realment necesari:
+
 ```
 echo 26 > /sys/class/gpio/export
 sleep 1
