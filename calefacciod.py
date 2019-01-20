@@ -2,7 +2,7 @@ import schedule
 import time
 import calefaccio
 
-calefaccio = Calefaccio()
+calefaccio = calefaccio.Calefaccio()
 
 def start_calefaccio():
     calefaccio.on()
