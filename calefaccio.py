@@ -1,6 +1,6 @@
 from gpiozero import LED
 
-class calefaccio:
+class Calefaccio:
 
     gpio = LED(26)
 
