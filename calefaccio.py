@@ -4,7 +4,7 @@ class Calefaccio:
     def __init__(self):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(26, GPIO.OUT)
-        self.gpio.off()
+        GPIO.output(26, GPIO.LOW)
 
     def on():
         GPIO.output(26, GPIO.LOW)
