@@ -11,3 +11,9 @@ def on():
 
 def off():
     GPIO.output(26, GPIO.HIGH)
+
+def status():
+    if GPIO.input(26):
+        return "off"
+    else:
+        return "on"
