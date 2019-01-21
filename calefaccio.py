@@ -7,6 +7,8 @@ except:
 status_bool=False
 
 def init():
+    global status_bool
+    global sample_mode
     if not sample_mode:
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
@@ -14,18 +16,24 @@ def init():
         GPIO.output(26, GPIO.LOW)
 
 def on():
+    global status_bool
+    global sample_mode
     if not sample_mode:
         GPIO.output(26, GPIO.LOW)
     else:
         status_bool=True
 
 def off():
+    global status_bool
+    global sample_mode
     if not sample_mode:
         GPIO.output(26, GPIO.HIGH)
     else:
         status_bool=False
 
 def status():
+    global status_bool
+    global sample_mode
     if not sample_mode:
         status_bool=GPIO.input(26)
     if status_bool:
