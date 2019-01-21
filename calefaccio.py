@@ -16,16 +16,18 @@ def init():
 def on():
     if not sample_mode:
         GPIO.output(26, GPIO.LOW)
+    else:
+        status_bool=True
 
 def off():
     if not sample_mode:
-    GPIO.output(26, GPIO.HIGH)
+        GPIO.output(26, GPIO.HIGH)
+    else:
+        status_bool=False
 
 def status():
     if not sample_mode:
         status_bool=GPIO.input(26)
-    else:
-        status_bool=not status_bool
     if status_bool:
         return "off"
     else:
