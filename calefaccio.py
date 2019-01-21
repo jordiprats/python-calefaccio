@@ -21,7 +21,7 @@ def on():
     if not sample_mode:
         GPIO.output(26, GPIO.LOW)
     else:
-        status_bool=True
+        status_bool=False
 
 def off():
     global status_bool
@@ -29,7 +29,7 @@ def off():
     if not sample_mode:
         GPIO.output(26, GPIO.HIGH)
     else:
-        status_bool=False
+        status_bool=True
 
 def status():
     global status_bool
