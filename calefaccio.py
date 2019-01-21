@@ -4,6 +4,8 @@ try:
 except:
     sample_mode=True
 
+status_bool=False
+
 def init():
     if not sample_mode:
         GPIO.setwarnings(False)
@@ -20,10 +22,10 @@ def off():
     GPIO.output(26, GPIO.HIGH)
 
 def status():
-    if sample_mode:
-        status_bool=sample_mode
-    else:
+    if not sample_mode:
         status_bool=GPIO.input(26)
+    else:
+        status_bool=not status_bool
     if status_bool:
         return "off"
     else:
