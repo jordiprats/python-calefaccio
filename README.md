@@ -17,6 +17,8 @@ echo 0 > /sys/class/gpio/gpio26/value
 [bot]
 
 token = TOKEN_HERE
+masters-id-telegram = [ "111" ]
+masters-groups-id-telegram = [ "-222" ]
 
 [schedule]
 
