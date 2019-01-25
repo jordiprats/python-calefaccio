@@ -46,6 +46,23 @@ def telegram_show_status(bot, update):
         return
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
+def telegram_on(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id):
+        update.message.reply_text("I'm afraid I can't do that.")
+        return
+    calefaccio.on()
+    update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
+
+def telegram_off(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id):
+        update.message.reply_text("I'm afraid I can't do that.")
+        return
+    calefaccio.off()
+    update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
 BOT_TOKEN = ""
 
@@ -86,6 +103,8 @@ if __name__ == "__main__":
 
     updater.dispatcher.add_handler(CommandHandler('start', telegram_start))
     updater.dispatcher.add_handler(CommandHandler('status', telegram_show_status))
+    updater.dispatcher.add_handler(CommandHandler('on', telegram_on))
+    updater.dispatcher.add_handler(CommandHandler('off', telegram_off))
 
     updater.start_polling()
 
