@@ -13,18 +13,25 @@ from ConfigParser import SafeConfigParser
 
 timeformat = '%Y-%m-%d %H:%M:%S'
 
-def start_calefaccio():
+def scheduled_start_calefaccio():
     calefaccio.on()
     logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
+    telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
 
-def stop_calefaccio():
+def scheduled_stop_calefaccio():
     calefaccio.off()
     logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
+    telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
 
 def run_scheduler():
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+def telegram_motify(str):
+    global masters_groups_id_telegram
+    for chat_id in masters_groups_id_telegram
+        bot.send_message(chat_id=int(chat_id), text=str)
 
 def telegram_preauth(user_id, chat_id):
     global masters_id_telegram, masters_groups_id_telegram
@@ -86,8 +93,8 @@ if __name__ == "__main__":
     masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
     masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
 
-    schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(stop_calefaccio)
-    schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(start_calefaccio)
+    schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
+    schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
 
     calefaccio.init()
     time.sleep(1)
