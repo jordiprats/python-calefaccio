@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     calefaccio.init()
     time.sleep(1)
-    calefaccio.on()
+    scheduled_start_calefaccio()
 
     scheduler_thread = Thread(target = run_scheduler, args = ())
     scheduler_thread.start()
