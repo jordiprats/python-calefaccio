@@ -31,7 +31,7 @@ def run_scheduler():
 def telegram_motify(str):
     global masters_groups_id_telegram
     for chat_id in masters_groups_id_telegram:
-        Bot.send_message(chat_id=int(chat_id), text=str)
+        telegram.Bot.send_message(chat_id=int(chat_id), text=str)
 
 def telegram_preauth(user_id, chat_id):
     global masters_id_telegram, masters_groups_id_telegram
