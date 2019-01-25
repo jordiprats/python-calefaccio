@@ -1,5 +1,6 @@
 import sys
 import time
+import json
 import logging
 import schedule
 import telegram
@@ -25,13 +26,25 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
-def telegram_start():
+def telegram_preauth(user_id):
+    global amos
+    return str(user_id) in amos
+
+def telegram_start(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
-    update.message.reply_text("DEMO START "+user_id+" "+chat_id, use_aliases=True)
+    if not telegram_preauth(user_id):
+        update.message.reply_text("I'm afraid I can't do that.")
+        return
+    update.message.reply_text("AUTH OK", use_aliases=True)
 
-def telegram_show_status():
-    update.message.reply_text("DEMO STATUS", use_aliases=True)
+def telegram_show_status(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id):
+        update.message.reply_text("I'm afraid I can't do that.")
+        return
+    update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
 
 BOT_TOKEN = ""
@@ -50,6 +63,12 @@ if __name__ == "__main__":
     config.read(basedir+'/calefacciod.config')
 
     BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
+
+    logging.debug("*X - AMOS: "+str(config.get('bot','amos')))
+
+    amos = json.loads(config.get('bot','amos'))
+
+    logging.debug("*X - AMOS JSON: "+str(amos))
 
     schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(stop_calefaccio)
     schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(start_calefaccio)
