@@ -15,11 +15,11 @@ timeformat = '%Y-%m-%d %H:%M:%S'
 
 def start_calefaccio():
     calefaccio.on()
-    print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status()
+    logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
 
 def stop_calefaccio():
     calefaccio.off()
-    print datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status()
+    logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
 
 def run_scheduler():
     while True:
