@@ -26,31 +26,33 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
-def telegram_preauth(user_id):
-    global amos
-    return str(user_id) in amos
+def telegram_preauth(user_id, chat_id):
+    global masters_id_telegram, masters_groups_id_telegram
+    # restrictiu
+    # return str(user_id) in masters_id_telegram and (str(chat_id) in masters_id_telegram or str(chat_id) in masters_groups_id_telegram)
+    return str(user_id) in masters_id_telegram or str(chat_id) in masters_groups_id_telegram
 
 def telegram_start(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
-    if not telegram_preauth(user_id):
-        update.message.reply_text("I'm afraid I can't do that.")
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
-    update.message.reply_text("AUTH OK", use_aliases=True)
+    update.message.reply_text("AUTH OK "+str(user_id)+" "+str(chat_id), use_aliases=True)
 
 def telegram_show_status(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
-    if not telegram_preauth(user_id):
-        update.message.reply_text("I'm afraid I can't do that.")
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
 def telegram_on(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
-    if not telegram_preauth(user_id):
-        update.message.reply_text("I'm afraid I can't do that.")
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     calefaccio.on()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
@@ -58,8 +60,8 @@ def telegram_on(bot, update):
 def telegram_off(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
-    if not telegram_preauth(user_id):
-        update.message.reply_text("I'm afraid I can't do that.")
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     calefaccio.off()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
@@ -81,11 +83,8 @@ if __name__ == "__main__":
 
     BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
 
-    logging.debug("*X - AMOS: "+str(config.get('bot','amos')))
-
-    amos = json.loads(config.get('bot','amos'))
-
-    logging.debug("*X - AMOS JSON: "+str(amos))
+    masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
+    masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
 
     schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(stop_calefaccio)
     schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(start_calefaccio)
