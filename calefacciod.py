@@ -14,14 +14,16 @@ from ConfigParser import SafeConfigParser
 timeformat = '%Y-%m-%d %H:%M:%S'
 
 def scheduled_start_calefaccio():
-    calefaccio.on()
-    logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
-    telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
+    if in_range:
+        calefaccio.on()
+        logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
+        telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
 
 def scheduled_stop_calefaccio():
-    calefaccio.off()
-    logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
-    telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
+    if in_range:
+        calefaccio.off()
+        logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
+        telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
 
 def run_scheduler():
     while True:
@@ -61,6 +63,7 @@ def telegram_on(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
+    in_range=True
     calefaccio.on()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
@@ -70,10 +73,12 @@ def telegram_off(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
+    in_range=False
     calefaccio.off()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
 BOT_TOKEN = ""
+in_range = True
 
 # main
 if __name__ == "__main__":
