@@ -96,14 +96,14 @@ if __name__ == "__main__":
     schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
     schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
 
+    updater = Updater(token=BOT_TOKEN)
+
     calefaccio.init()
     time.sleep(1)
     scheduled_start_calefaccio()
 
     scheduler_thread = Thread(target = run_scheduler, args = ())
     scheduler_thread.start()
-
-    updater = Updater(token=BOT_TOKEN)
 
     dp = updater.dispatcher
 
