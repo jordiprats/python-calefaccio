@@ -95,7 +95,10 @@ if __name__ == "__main__":
         config.read(configfile)
 
         BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
-        debug = config.getboolean('bot', 'debug')
+        try:
+            debug = config.getboolean('bot', 'debug')
+        except:
+            debug = False
 
         if not debug:
             logging.setLevel(logging.WARNING)
