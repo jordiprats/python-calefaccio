@@ -7,9 +7,10 @@ import telegram
 import calefaccio
 import datetime, time
 
+from pidfile import PIDFile
 from threading import Thread
-from telegram.ext import Updater, CommandHandler
 from ConfigParser import SafeConfigParser
+from telegram.ext import Updater, CommandHandler
 
 timeformat = '%Y-%m-%d %H:%M:%S'
 
@@ -82,41 +83,42 @@ in_range = True
 
 # main
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    with PIDFile("/var/run/calefacciod.pid"):
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    try:
-        basedir = sys.argv[1]
-    except IndexError:
-        basedir = '.'
+        try:
+            basedir = sys.argv[1]
+        except IndexError:
+            basedir = '.'
 
-    config = SafeConfigParser()
-    config.read(basedir+'/calefacciod.config')
+        config = SafeConfigParser()
+        config.read(basedir+'/calefacciod.config')
 
-    BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
+        BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
 
-    masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
-    masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
+        masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
+        masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
 
-    schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
-    schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
+        schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
+        schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
 
-    updater = Updater(token=BOT_TOKEN)
+        updater = Updater(token=BOT_TOKEN)
 
-    calefaccio.init()
-    time.sleep(1)
-    scheduled_start_calefaccio()
+        calefaccio.init()
+        time.sleep(1)
+        scheduled_start_calefaccio()
 
-    scheduler_thread = Thread(target = run_scheduler, args = ())
-    scheduler_thread.start()
+        scheduler_thread = Thread(target = run_scheduler, args = ())
+        scheduler_thread.start()
 
-    dp = updater.dispatcher
+        dp = updater.dispatcher
 
-    updater.dispatcher.add_handler(CommandHandler('start', telegram_start))
-    updater.dispatcher.add_handler(CommandHandler('status', telegram_show_status))
-    updater.dispatcher.add_handler(CommandHandler('on', telegram_on))
-    updater.dispatcher.add_handler(CommandHandler('off', telegram_off))
+        updater.dispatcher.add_handler(CommandHandler('start', telegram_start))
+        updater.dispatcher.add_handler(CommandHandler('status', telegram_show_status))
+        updater.dispatcher.add_handler(CommandHandler('on', telegram_on))
+        updater.dispatcher.add_handler(CommandHandler('off', telegram_off))
 
-    updater.start_polling()
+        updater.start_polling()
 
-    updater.idle()
+        updater.idle()
