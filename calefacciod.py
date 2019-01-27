@@ -7,7 +7,7 @@ import telegram
 import calefaccio
 import datetime, time
 
-from pidfile import PIDFile
+from pid import PidFile
 from threading import Thread
 from ConfigParser import SafeConfigParser
 from telegram.ext import Updater, CommandHandler
@@ -83,7 +83,7 @@ in_range = True
 
 # main
 if __name__ == "__main__":
-    with PIDFile("/var/run/calefacciod.pid"):
+    with PidFile('calefacciod') as pidfile:
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
