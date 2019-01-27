@@ -86,11 +86,6 @@ if __name__ == "__main__":
     with PidFile('calefacciod') as pidfile:
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-        print(pidfile.pidname) # -> 'foo'
-        print(pidfile.piddir) # -> '/var/run' But you can modify it when initialize PidFile.
-        print(os.listdir('/var/run')) # -> ['foo.pid']
-
         try:
             basedir = sys.argv[1]
         except IndexError:
