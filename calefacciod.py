@@ -87,6 +87,8 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+        logging.debug(pidfile.piddir+pidfile.pidname)
+
         try:
             basedir = sys.argv[1]
         except IndexError:
