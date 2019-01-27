@@ -87,12 +87,12 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         try:
-            basedir = sys.argv[1]
+            configfile = sys.argv[1]
         except IndexError:
-            basedir = '.'
+            configfile = './calefacciod.config'
 
         config = SafeConfigParser()
-        config.read(basedir+'/calefacciod.config')
+        config.read(configfile)
 
         BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
 
