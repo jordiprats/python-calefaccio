@@ -87,8 +87,8 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-        print(p.pidname) # -> 'foo'
-        print(p.piddir) # -> '/var/run' But you can modify it when initialize PidFile.
+        print(pidfile.pidname) # -> 'foo'
+        print(pidfile.piddir) # -> '/var/run' But you can modify it when initialize PidFile.
         print(os.listdir('/var/run')) # -> ['foo.pid']
 
         try:
