@@ -110,6 +110,7 @@ if __name__ == "__main__":
         scheduled_start_calefaccio()
 
         scheduler_thread = Thread(target = run_scheduler, args = ())
+        scheduler_thread.daemon = True
         scheduler_thread.start()
 
         dp = updater.dispatcher
