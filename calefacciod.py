@@ -95,14 +95,11 @@ if __name__ == "__main__":
         config.read(configfile)
 
         BOT_TOKEN = config.get('bot', 'token').strip('"').strip("'").strip()
-        
+
         try:
             debug = config.getboolean('bot', 'debug')
         except:
             debug = False
-
-        if not debug:
-            logging.setLevel(logging.WARNING)
 
         masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
         masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))

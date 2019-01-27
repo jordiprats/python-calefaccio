@@ -10,6 +10,8 @@ User=root
 Group=root
 PermissionsStartOnly=false
 PrivateTmp=no
+StandardOutput=null
+StandardError=null
 
 [Install]
 WantedBy=multi-user.target
