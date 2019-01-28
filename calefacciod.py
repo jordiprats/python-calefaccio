@@ -17,9 +17,9 @@ timeformat = '%Y-%m-%d %H:%M:%S'
 def get_scheduler_status():
     global enabled_scheduler
     if enabled_scheduler:
-        return "off"
-    else:
         return "on"
+    else:
+        return "off"
 
 def scheduled_start_calefaccio():
     if enabled_scheduler:
