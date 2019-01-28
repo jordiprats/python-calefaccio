@@ -31,6 +31,27 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
+def telegram_show_scheduler(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+
+    try:
+        array_schedules_start_calefaccio = json.loads(config.get('bot','daily_start'))
+        for start_calefaccio_at in array_schedules_start_calefaccio:
+            update.message.reply_text("daily start at: "+start_calefaccio_at)
+    except:
+        update.message.reply_text("daily start at: "+config.get('schedule', 'daily_start').strip('"').strip("'").strip())
+
+    try:
+        array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
+        for stop_calefaccio_at in array_schedules_stop_calefaccio:
+            update.message.reply_text("daily stop at: "+stop_calefaccio_at)
+    except:
+        update.message.reply_text("daily start at: "+config.get('schedule', 'daily_stop').strip('"').strip("'").strip())
+
 def telegram_motify(str):
     global masters_groups_id_telegram, updater
     for chat_id in masters_groups_id_telegram:
@@ -139,14 +160,14 @@ if __name__ == "__main__":
         try:
             array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
             for stop_calefaccio_at in array_schedules_stop_calefaccio:
-                schedule.every().day.at(schedule_stop_calefaccio_at).do(scheduled_stop_calefaccio)
+                schedule.every().day.at(stop_calefaccio_at).do(scheduled_stop_calefaccio)
         except:
             schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
 
         try:
             array_schedules_start_calefaccio = json.loads(config.get('bot','daily_start'))
             for start_calefaccio_at in array_schedules_start_calefaccio:
-                schedule.every().day.at(schedule_start_calefaccio_at).do(scheduled_start_calefaccio)
+                schedule.every().day.at(start_calefaccio_at).do(scheduled_start_calefaccio)
         except:
             schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
 
@@ -169,6 +190,7 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('enablescheduler', telegram_enable_scheduler))
         updater.dispatcher.add_handler(CommandHandler('disablescheduler', telegram_disable_scheduler))
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
+        updater.dispatcher.add_handler(CommandHandler('showscheduler', telegram_show_scheduler))
 
         updater.start_polling()
 
