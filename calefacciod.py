@@ -15,13 +15,13 @@ from telegram.ext import Updater, CommandHandler
 timeformat = '%Y-%m-%d %H:%M:%S'
 
 def scheduled_start_calefaccio():
-    if in_range:
+    if enabled_scheduler:
         calefaccio.on()
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
         telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
 
 def scheduled_stop_calefaccio():
-    if in_range:
+    if enabled_scheduler:
         calefaccio.off()
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
         telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
@@ -59,27 +59,59 @@ def telegram_show_status(bot, update):
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
 def telegram_on(bot, update):
+    global circuitbreaker_status
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
-    in_range=True
+    circuitbreaker_status = True
     calefaccio.on()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
 def telegram_off(bot, update):
+    global circuitbreaker_status
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
-    in_range=False
+    circuitbreaker_status = False
     calefaccio.off()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
 
+def telegram_enable_scheduler(bot, update):
+    global enabled_scheduler
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    enabled_scheduler = True
+    update.message.reply_text("SHEDULER STATUS: "+enabled_scheduler?"RUNNING":"STOPPED", use_aliases=True)
+
+def telegram_disable_scheduler(bot, update):
+    global enabled_scheduler
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    enabled_scheduler = False
+    update.message.reply_text("SHEDULER STATUS: "+enabled_scheduler?"RUNNING":"STOPPED", use_aliases=True)
+
+def telegram_status_scheduler(bot, update):
+    global enabled_scheduler
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    update.message.reply_text("SHEDULER STATUS: "+enabled_scheduler?"RUNNING":"STOPPED", use_aliases=True)
+
 BOT_TOKEN = ""
-in_range = True
+circuitbreaker_status = True
+enabled_scheduler = True
 
 # main
 if __name__ == "__main__":
@@ -104,8 +136,19 @@ if __name__ == "__main__":
         masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
         masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
 
-        schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
-        schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
+        try:
+            array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
+            for stop_calefaccio_at in array_schedules_stop_calefaccio:
+                schedule.every().day.at(schedule_stop_calefaccio_at).do(scheduled_stop_calefaccio)
+        except:
+            schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
+
+        try:
+            array_schedules_start_calefaccio = json.loads(config.get('bot','daily_start'))
+            for start_calefaccio_at in array_schedules_start_calefaccio:
+                schedule.every().day.at(schedule_start_calefaccio_at).do(scheduled_start_calefaccio)
+        except:
+            schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
 
         updater = Updater(token=BOT_TOKEN)
 
@@ -123,6 +166,9 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('status', telegram_show_status))
         updater.dispatcher.add_handler(CommandHandler('on', telegram_on))
         updater.dispatcher.add_handler(CommandHandler('off', telegram_off))
+        updater.dispatcher.add_handler(CommandHandler('enablescheduler', telegram_enable_scheduler))
+        updater.dispatcher.add_handler(CommandHandler('disablescheduler', telegram_disable_scheduler))
+        updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
 
         updater.start_polling()
 
