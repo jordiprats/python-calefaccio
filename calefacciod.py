@@ -116,7 +116,7 @@ def telegram_enable_scheduler(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     enabled_scheduler = True
-    update.message.reply_text("SHEDULER STATUS: "+enabled_scheduler?"RUNNING":"STOPPED", use_aliases=True)
+    update.message.reply_text("SHEDULER STATUS: "+get_scheduler_status(), use_aliases=True)
 
 def telegram_disable_scheduler(bot, update):
     global enabled_scheduler
