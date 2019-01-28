@@ -25,3 +25,14 @@ masters-groups-id-telegram = [ "-222" ]
 daily_start = "05:00"
 daily_stop = "00:00"
 ```
+
+## comandes
+
+start - inicia bot
+status - mostra estat calefacció
+on - arranca calefacció
+off - para calefacció
+enablescheduler - habilita aturada/arranc horari
+disablescheduler - deshabilita aturada/arranc horari
+statusscheduler - mostra estat aturada/arranc horari
+showscheduler - mostra programació horaria
