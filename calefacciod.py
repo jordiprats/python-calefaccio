@@ -57,7 +57,7 @@ def telegram_show_scheduler(bot, update):
         for stop_calefaccio_at in array_schedules_stop_calefaccio:
             update.message.reply_text("daily stop at: "+stop_calefaccio_at)
     except:
-        update.message.reply_text("daily start at: "+config.get('schedule', 'daily_stop').strip('"').strip("'").strip())
+        update.message.reply_text("daily stop at: "+config.get('schedule', 'daily_stop').strip('"').strip("'").strip())
 
 def telegram_motify(str):
     global masters_groups_id_telegram, updater
