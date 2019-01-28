@@ -14,6 +14,13 @@ from telegram.ext import Updater, CommandHandler
 
 timeformat = '%Y-%m-%d %H:%M:%S'
 
+def get_scheduler_status():
+    global enabled_scheduler
+    if enabled_scheduler:
+        return "off"
+    else:
+        return "on"
+
 def scheduled_start_calefaccio():
     if enabled_scheduler:
         calefaccio.on()
@@ -119,7 +126,7 @@ def telegram_disable_scheduler(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     enabled_scheduler = False
-    update.message.reply_text("SHEDULER STATUS: "+enabled_scheduler?"RUNNING":"STOPPED", use_aliases=True)
+    update.message.reply_text("SHEDULER STATUS: "+get_scheduler_status(), use_aliases=True)
 
 def telegram_status_scheduler(bot, update):
     global enabled_scheduler
@@ -128,7 +135,7 @@ def telegram_status_scheduler(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
-    update.message.reply_text("SHEDULER STATUS: "+enabled_scheduler?"RUNNING":"STOPPED", use_aliases=True)
+    update.message.reply_text("SHEDULER STATUS: "+get_scheduler_status(), use_aliases=True)
 
 BOT_TOKEN = ""
 circuitbreaker_status = True
