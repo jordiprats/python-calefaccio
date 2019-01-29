@@ -1,4 +1,5 @@
 python-telegram-bot
+adafruit-io
 schedule
 RPi.GPIO
 pid

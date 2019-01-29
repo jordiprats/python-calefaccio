@@ -9,6 +9,7 @@ import datetime, time
 
 from pid import PidFile
 from threading import Thread
+from Adafruit_IO import MQTTClient
 from ConfigParser import SafeConfigParser
 from telegram.ext import Updater, CommandHandler
 
