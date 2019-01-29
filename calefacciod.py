@@ -187,6 +187,7 @@ def telegram_status_scheduler(bot, update):
 BOT_TOKEN = ""
 circuitbreaker_status = True
 enabled_scheduler = True
+masters_inda_haus = {}
 
 # main
 if __name__ == "__main__":
