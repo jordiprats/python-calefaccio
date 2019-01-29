@@ -39,6 +39,52 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
+def adafruitio_connected(client):
+    global masters_id_telegram
+    for master_id in masters_id_telegram:
+        try:
+            client.subscribe(master_id)
+        except:
+            print("exception subcribing to Adafruit IO / feed "+master_id)
+
+def adafruitio_disconnected(client):
+    # reconnect
+    adafruitio_thread = Thread(target = run_adafruitio_task, args = ())
+    adafruitio_thread.daemon = True
+    adafruitio_thread.start()
+
+def adafruitio_message(client, feed_id, payload):
+    global masters_inda_haus
+    if int(payload) > 0:
+        masters_inda_haus[str(feed_id)]=True
+    else:
+        masters_inda_haus[str(feed_id)]=False
+
+    master_count=0
+    for master in masters_inda_haus:
+        if master:
+            master_count+=1
+
+    if master_count==0:
+        telegram_motify("*X LOCKDOWN *X")
+
+
+def run_adafruitio_task():
+    global adafruitio_username, adafruitio_key
+    adafruitio_client = MQTTClient(adafruitio_username, adafruitio_key)
+    # Setup the callback functions defined above.
+    client.on_connect    = adafruitio_connected
+    client.on_disconnect = adafruitio_disconnected
+    client.on_message    = adafruitio_message
+
+    # Connect to the Adafruit IO server.
+    client.connect()
+
+    # Start a message loop that blocks forever waiting for MQTT messages to be
+    # received.  Note there are other options for running the event loop like doing
+    # so in a background thread--see the mqtt_client.py example to learn more.
+    client.loop_blocking()
+
 def telegram_show_scheduler(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
@@ -162,6 +208,13 @@ if __name__ == "__main__":
         except:
             debug = False
 
+        try:
+            adafruitio_username = config.get('adafruitio', 'username').strip('"').strip("'").strip()
+            adafruitio_key = config.get('adafruitio', 'key').strip('"').strip("'").strip()
+            adafruitio_enabled = True
+        except:
+            adafruitio_enabled = False
+
         masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
         masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
 
@@ -178,6 +231,21 @@ if __name__ == "__main__":
                 schedule.every().day.at(start_calefaccio_at).do(scheduled_start_calefaccio)
         except:
             schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
+
+        #
+        # adafruit IO
+        #
+        if adafruitio_enabled:
+            for master_id in masters_id_telegram:
+                masters_inda_haus[master_id] = True
+            adafruitio_thread = Thread(target = run_adafruitio_task, args = ())
+            adafruitio_thread.daemon = True
+            adafruitio_thread.start()
+
+
+        #
+        # telegram
+        #
 
         updater = Updater(token=BOT_TOKEN)
 
