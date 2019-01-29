@@ -71,7 +71,7 @@ def adafruitio_message(client, feed_id, payload):
 
 def run_adafruitio_task():
     global adafruitio_username, adafruitio_key
-    adafruitio_client = MQTTClient(adafruitio_username, adafruitio_key)
+    client = MQTTClient(adafruitio_username, adafruitio_key)
     # Setup the callback functions defined above.
     client.on_connect    = adafruitio_connected
     client.on_disconnect = adafruitio_disconnected
