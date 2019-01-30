@@ -9,8 +9,8 @@ import datetime, time
 
 from pid import PidFile
 from threading import Thread
-from Adafruit_IO import MQTTClient
 from ConfigParser import SafeConfigParser
+from Adafruit_IO import MQTTClient, Client
 from telegram.ext import Updater, CommandHandler
 
 timeformat = '%Y-%m-%d %H:%M:%S'
@@ -56,9 +56,9 @@ def adafruitio_disconnected(client):
 def adafruitio_message(client, feed_id, payload):
     global masters_inda_haus
     if int(payload) > 0:
-        masters_inda_haus[str(feed_id)]=True
+        masters_inda_haus[str(feed_id)] = True
     else:
-        masters_inda_haus[str(feed_id)]=False
+        masters_inda_haus[str(feed_id)] = False
 
     master_count=0
     for master in keys(masters_inda_haus):
@@ -80,12 +80,14 @@ def run_adafruitio_task():
     # Connect to the Adafruit IO server.
     client.connect()
 
+    aio = Client(adafruitio_username, adafruitio_key)
+
     for master in masters_inda_haus.keys():
-        data = client.receive('Test')
+        data = aio.receive(master)
         if int(data) > 0:
             masters_inda_haus[master] = True
         else:
-            masters_inda_haus[str(feed_id)]=False
+            masters_inda_haus[master] = False
 
     master_count=0
     for master in masters_inda_haus.keys():
