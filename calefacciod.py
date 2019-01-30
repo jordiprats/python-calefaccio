@@ -95,7 +95,7 @@ def run_adafruitio_task():
             master_count+=1
 
     if master_count==0:
-        telegram_motify("*X LOCKDOWN *X")
+        telegram_motify("AUTOMATIC ACTION - *X LOCKDOWN *X")
 
 
     # Start a message loop that blocks forever waiting for MQTT messages to be
