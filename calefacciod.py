@@ -55,7 +55,11 @@ def adafruitio_disconnected(client):
 
 def adafruitio_message(client, feed_id, payload):
     global masters_inda_haus
+<<<<<<< HEAD
     if int(payload.value) > 0:
+=======
+    if int(payload) > 0:
+>>>>>>> 0eaf07b79d4cc41909778b3747579a91fc68f517
         masters_inda_haus[str(feed_id)] = True
     else:
         masters_inda_haus[str(feed_id)] = False
@@ -84,7 +88,11 @@ def run_adafruitio_task():
 
     for master in masters_inda_haus.keys():
         data = aio.receive(master)
+<<<<<<< HEAD
         if int(data.value) > 0:
+=======
+        if int(data) > 0:
+>>>>>>> 0eaf07b79d4cc41909778b3747579a91fc68f517
             masters_inda_haus[master] = True
         else:
             masters_inda_haus[master] = False
@@ -95,7 +103,12 @@ def run_adafruitio_task():
             master_count+=1
 
     if master_count==0:
+<<<<<<< HEAD
         telegram_motify("AUTOMATIC ACTION - *X LOCKDOWN *X")
+=======
+        telegram_motify("*X LOCKDOWN *X")
+
+>>>>>>> 0eaf07b79d4cc41909778b3747579a91fc68f517
 
     # Start a message loop that blocks forever waiting for MQTT messages to be
     # received.  Note there are other options for running the event loop like doing
