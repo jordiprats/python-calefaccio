@@ -26,13 +26,13 @@ def scheduled_start_calefaccio():
     if enabled_scheduler:
         calefaccio.on()
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
-        telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
+        telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
 
 def scheduled_stop_calefaccio():
     if enabled_scheduler:
         calefaccio.off()
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
-        telegram_motify("AUTOMATIC STATUS: "+calefaccio.status())
+        telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
 
 def run_scheduler():
     while True:
@@ -61,8 +61,8 @@ def adafruitio_message(client, feed_id, payload):
         masters_inda_haus[str(feed_id)]=False
 
     master_count=0
-    for master in masters_inda_haus:
-        if master:
+    for master in keys(masters_inda_haus):
+        if masters_inda_haus[master]:
             master_count+=1
 
     if master_count==0:
@@ -70,7 +70,7 @@ def adafruitio_message(client, feed_id, payload):
 
 
 def run_adafruitio_task():
-    global adafruitio_username, adafruitio_key
+    global adafruitio_username, adafruitio_key, masters_inda_haus
     client = MQTTClient(adafruitio_username, adafruitio_key)
     # Setup the callback functions defined above.
     client.on_connect    = adafruitio_connected
@@ -79,6 +79,22 @@ def run_adafruitio_task():
 
     # Connect to the Adafruit IO server.
     client.connect()
+
+    for master in keys(masters_inda_haus):
+        data = client.receive('Test')
+        if int(data) > 0:
+            masters_inda_haus[master] = True
+        else:
+            masters_inda_haus[str(feed_id)]=False
+
+    master_count=0
+    for master in keys(masters_inda_haus):
+        if masters_inda_haus[master]:
+            master_count+=1
+
+    if master_count==0:
+        telegram_motify("*X LOCKDOWN *X")
+
 
     # Start a message loop that blocks forever waiting for MQTT messages to be
     # received.  Note there are other options for running the event loop like doing
