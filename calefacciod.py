@@ -55,7 +55,7 @@ def adafruitio_disconnected(client):
 
 def adafruitio_message(client, feed_id, payload):
     global masters_inda_haus
-    if int(payload) > 0:
+    if int(payload.value) > 0:
         masters_inda_haus[str(feed_id)] = True
     else:
         masters_inda_haus[str(feed_id)] = False
@@ -84,7 +84,7 @@ def run_adafruitio_task():
 
     for master in masters_inda_haus.keys():
         data = aio.receive(master)
-        if int(data) > 0:
+        if int(data.value) > 0:
             masters_inda_haus[master] = True
         else:
             masters_inda_haus[master] = False
