@@ -59,14 +59,16 @@ def adafruitio_connected(client):
 
 def adafruitio_disconnected(client):
     # reconnect
-    loggin.debug("adafruit io reconnect")
+    logging.debug("adafruit io reconnect")
     adafruitio_thread = Thread(target = run_adafruitio_task, args = ())
     adafruitio_thread.daemon = True
     adafruitio_thread.start()
 
 def adafruitio_message(client, feed_id, payload):
     global masters_inda_haus
-    loggin.debug("adafruit io message")
+    logging.debug("adafruit io message")
+    print("adafruit io message")
+
     if int(payload.value) > 0:
         masters_inda_haus[str(feed_id)] = True
     else:
