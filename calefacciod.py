@@ -97,7 +97,6 @@ def run_adafruitio_task():
     if master_count==0:
         telegram_motify("AUTOMATIC ACTION - *X LOCKDOWN *X")
 
-
     # Start a message loop that blocks forever waiting for MQTT messages to be
     # received.  Note there are other options for running the event loop like doing
     # so in a background thread--see the mqtt_client.py example to learn more.
