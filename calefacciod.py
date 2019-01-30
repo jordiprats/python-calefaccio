@@ -15,6 +15,16 @@ from telegram.ext import Updater, CommandHandler
 
 timeformat = '%Y-%m-%d %H:%M:%S'
 
+def enable_lockdown():
+    global enabled_scheduler
+    enabled_scheduler = False
+    calefaccio.off()
+
+def disable_lockdown():
+    global enabled_scheduler
+    enabled_scheduler = True
+    calefaccio.on()
+
 def get_scheduler_status():
     global enabled_scheduler
     if enabled_scheduler:
@@ -66,7 +76,11 @@ def adafruitio_message(client, feed_id, payload):
             master_count+=1
 
     if master_count==0:
-        telegram_motify("*X LOCKDOWN *X")
+        telegram_motify("LOCKDOWN MODE ENABLED")
+        enable_lockdown()
+    else:
+        telegram_motify("LOCKDOWN DISABLED")
+        disable_lockdown()
 
 
 def run_adafruitio_task():
@@ -95,7 +109,8 @@ def run_adafruitio_task():
             master_count+=1
 
     if master_count==0:
-        telegram_motify("AUTOMATIC ACTION - *X LOCKDOWN *X")
+        telegram_motify("AUTOMATIC ACTION - LOCKDOWN MODE ENABLED")
+        enable_lockdown()
 
     # Start a message loop that blocks forever waiting for MQTT messages to be
     # received.  Note there are other options for running the event loop like doing
