@@ -69,15 +69,13 @@ def adafruitio_message(client, feed_id, payload):
     logging.debug("adafruit io message")
     print("adafruit io message: "+str(payload))
 
-    print("masters: "+str(masters_inda_haus))
     if int(payload) > 0:
         masters_inda_haus[str(feed_id)] = True
     else:
         masters_inda_haus[str(feed_id)] = False
-    print("masters post: "+str(masters_inda_haus))
 
     master_count=0
-    for master in keys(masters_inda_haus):
+    for master in masters_inda_haus.keys():
         if masters_inda_haus[master]:
             master_count+=1
 
