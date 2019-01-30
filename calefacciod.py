@@ -69,7 +69,7 @@ def adafruitio_message(client, feed_id, payload):
     logging.debug("adafruit io message")
     print("adafruit io message: "+str(payload))
 
-    if int(payload.value) > 0:
+    if int(payload) > 0:
         masters_inda_haus[str(feed_id)] = True
     else:
         masters_inda_haus[str(feed_id)] = False
