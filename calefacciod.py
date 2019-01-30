@@ -80,7 +80,7 @@ def run_adafruitio_task():
     # Connect to the Adafruit IO server.
     client.connect()
 
-    for master in keys(masters_inda_haus):
+    for master in masters_inda_haus.keys():
         data = client.receive('Test')
         if int(data) > 0:
             masters_inda_haus[master] = True
@@ -88,7 +88,7 @@ def run_adafruitio_task():
             masters_inda_haus[str(feed_id)]=False
 
     master_count=0
-    for master in keys(masters_inda_haus):
+    for master in masters_inda_haus.keys():
         if masters_inda_haus[master]:
             master_count+=1
 
