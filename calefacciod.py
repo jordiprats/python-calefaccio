@@ -67,7 +67,7 @@ def adafruitio_disconnected(client):
 def adafruitio_message(client, feed_id, payload):
     global masters_inda_haus
     logging.debug("adafruit io message")
-    print("adafruit io message")
+    print("adafruit io message: "+str(payload))
 
     if int(payload.value) > 0:
         masters_inda_haus[str(feed_id)] = True
