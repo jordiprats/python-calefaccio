@@ -25,6 +25,9 @@ def disable_lockdown():
     enabled_scheduler = True
     calefaccio.on()
 
+def is_locked_down():
+    return calefaccio.status()=="off" and not enabled_scheduler
+
 def get_scheduler_status():
     global enabled_scheduler
     if enabled_scheduler:
@@ -84,7 +87,7 @@ def adafruitio_message(client, feed_id, payload):
     if master_count==0:
         telegram_motify("LOCKDOWN MODE ENABLED")
         enable_lockdown()
-    else:
+    elif is_locked_down():
         telegram_motify("LOCKDOWN DISABLED")
         disable_lockdown()
 
