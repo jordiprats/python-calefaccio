@@ -126,6 +126,17 @@ def run_adafruitio_task():
     # so in a background thread--see the mqtt_client.py example to learn more.
     client.loop_blocking()
 
+def telegram_debug_adafruit_io(bot, update):
+    global masters_inda_haus
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    for master in masters_inda_haus.keys():
+        update.message.reply_text("master: "+str(master))
+        update.message.reply_text("value: "+str(masters_inda_haus[master]))
+
 def telegram_show_scheduler(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
@@ -309,6 +320,7 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('disablescheduler', telegram_disable_scheduler))
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
         updater.dispatcher.add_handler(CommandHandler('showscheduler', telegram_show_scheduler))
+        updater.dispatcher.add_handler(CommandHandler('debugadafruitio', telegram_debug_adafruit_io))
 
         updater.start_polling()
 
