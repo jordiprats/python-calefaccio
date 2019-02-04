@@ -124,7 +124,15 @@ def run_adafruitio_task():
     # Start a message loop that blocks forever waiting for MQTT messages to be
     # received.  Note there are other options for running the event loop like doing
     # so in a background thread--see the mqtt_client.py example to learn more.
-    client.loop_blocking()
+    try:
+        client.loop_blocking()
+    except:
+        print("ADAFRUID IO THREAD ABORTED")
+
+    adafruitio_thread = Thread(target = run_adafruitio_task, args = ())
+    adafruitio_thread.daemon = True
+    adafruitio_thread.start()
+
 
 def telegram_debug_adafruit_io(bot, update):
     global masters_inda_haus
