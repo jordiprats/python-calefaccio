@@ -84,12 +84,13 @@ def adafruitio_message(client, feed_id, payload):
 
     print("master count: "+str(master_count))
 
-    if master_count==0:
-        telegram_motify("LOCKDOWN MODE ENABLED")
-        enable_lockdown()
-    elif is_locked_down():
-        telegram_motify("LOCKDOWN DISABLED")
-        disable_lockdown()
+    if adafruitio_enabled:
+        if master_count==0:
+            telegram_motify("LOCKDOWN MODE ENABLED")
+            enable_lockdown()
+        elif is_locked_down():
+            telegram_motify("LOCKDOWN DISABLED")
+            disable_lockdown()
 
 
 def run_adafruitio_task():
@@ -148,6 +149,13 @@ def telegram_enable_adafruit_io(bot, update):
             update.message.reply_text("Adafruit IO already ONLINE")
         else:
             adafruitio_enabled = True
+            if master_count==0:
+                telegram_motify("LOCKDOWN MODE ENABLED")
+                enable_lockdown()
+            elif is_locked_down():
+                telegram_motify("LOCKDOWN DISABLED")
+                disable_lockdown()
+
             telegram_status_adafruit_io(bot, update)
 
 def telegram_disable_adafruit_io(bot, update):
