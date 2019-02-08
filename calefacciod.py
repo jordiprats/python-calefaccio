@@ -134,6 +134,51 @@ def run_adafruitio_task():
     adafruitio_thread.start()
 
 
+def telegram_enable_adafruit_io(bot, update):
+    global adafruitio_enabled, adafruitio_adm_down
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    if adafruitio_adm_down:
+        update.message.reply_text("Adafruit IO administratively DOWN")
+    else:
+        if adafruitio_enabled:
+            update.message.reply_text("Adafruit IO already ONLINE")
+        else:
+            adafruitio_enabled = True
+            telegram_status_adafruit_io(bot, update)
+
+def telegram_disable_adafruit_io(bot, update):
+    global adafruitio_enabled, adafruitio_adm_down
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    if adafruitio_adm_down:
+        update.message.reply_text("Adafruit IO administratively DOWN")
+    else:
+        if adafruitio_enabled:
+            adafruitio_enabled = False
+        telegram_status_adafruit_io(bot, update)
+
+def telegram_status_adafruit_io(bot, update):
+    global adafruitio_enabled, adafruitio_adm_down
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    if adafruitio_adm_down:
+        update.message.reply_text("Adafruit IO administratively DOWN")
+    else:
+        if adafruitio_enabled:
+            update.message.reply_text("Adafruit IO ONLINE")
+        else:
+            update.message.reply_text("Adafruit IO OFFLINE")
+
 def telegram_debug_adafruit_io(bot, update):
     global masters_inda_haus
     user_id = update.message.from_user.id
@@ -273,8 +318,10 @@ if __name__ == "__main__":
             adafruitio_username = config.get('adafruitio', 'username').strip('"').strip("'").strip()
             adafruitio_key = config.get('adafruitio', 'key').strip('"').strip("'").strip()
             adafruitio_enabled = True
+            adafruitio_adm_down = False
         except:
             adafruitio_enabled = False
+            adafruitio_adm_down = True
 
         masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
         masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
@@ -329,6 +376,9 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
         updater.dispatcher.add_handler(CommandHandler('showscheduler', telegram_show_scheduler))
         updater.dispatcher.add_handler(CommandHandler('debugadafruitio', telegram_debug_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('enableafruitio', telegram_enable_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('disableafruitio', telegram_disable_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('statusafruitio', telegram_status_adafruit_io))
 
         updater.start_polling()
 
