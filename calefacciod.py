@@ -128,8 +128,9 @@ def run_adafruitio_task():
     try:
         client.loop_blocking()
     except:
-        print("ADAFRUID IO THREAD ABORTED")
+        telegram_motify("ADAFRUID IO THREAD ABORTED")
 
+    telegram_motify("RESTARTING ADAFRUID IO")
     adafruitio_thread = Thread(target = run_adafruitio_task, args = ())
     adafruitio_thread.daemon = True
     adafruitio_thread.start()
