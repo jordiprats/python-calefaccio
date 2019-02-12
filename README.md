@@ -36,3 +36,8 @@ enablescheduler - habilita aturada/arranc horari
 disablescheduler - deshabilita aturada/arranc horari
 statusscheduler - mostra estat aturada/arranc horari
 showscheduler - mostra programació horaria
+debugadafruitio - info adafruit
+enableadafruitio - habilita adafruit
+disableadafruitio - deshabilita adafruit
+statusadafruitio - estat adafruit
+refreshadafruitio - força refresh adafruit

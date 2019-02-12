@@ -58,11 +58,11 @@ def adafruitio_connected(client):
         try:
             client.subscribe(master_id)
         except:
-            print("exception subcribing to Adafruit IO / feed "+master_id)
+            telegram_motify("exception subcribing to Adafruit IO / feed "+master_id)
 
 def adafruitio_disconnected(client):
     # reconnect
-    logging.debug("adafruit io reconnect")
+    telegram_motify("Adafruit IO reconnect")
     adafruitio_thread = Thread(target = run_adafruitio_task, args = ())
     adafruitio_thread.daemon = True
     adafruitio_thread.start()
@@ -92,9 +92,15 @@ def adafruitio_message(client, feed_id, payload):
             telegram_motify("LOCKDOWN DISABLED")
             disable_lockdown()
 
-
 def run_adafruitio_task():
-    global adafruitio_username, adafruitio_key, masters_inda_haus
+    global adafruitio_username, adafruitio_key, masters_inda_haus, adafruit_lastconnect
+
+    timestamp_now = datetime.timestamp(datetime.now())
+    if(timestamp_now-adafruit_lastconnect<300)
+        return
+
+    adafruit_lastconnect = timestamp_now
+
     client = MQTTClient(adafruitio_username, adafruitio_key)
     # Setup the callback functions defined above.
     client.on_connect    = adafruitio_connected
@@ -135,6 +141,36 @@ def run_adafruitio_task():
     adafruitio_thread.daemon = True
     adafruitio_thread.start()
 
+def telegram_refresh_adafruit_io(bot, update):
+    global adafruitio_enabled, adafruitio_adm_down, masters_inda_haus
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    if adafruitio_adm_down:
+        update.message.reply_text("Adafruit IO administratively DOWN")
+    else:
+        aio = Client(adafruitio_username, adafruitio_key)
+
+        for master in masters_inda_haus.keys():
+            data = aio.receive(master)
+            if int(data.value) > 0:
+                masters_inda_haus[master] = True
+            else:
+                masters_inda_haus[master] = False
+
+        master_count=0
+        for master in masters_inda_haus.keys():
+            if masters_inda_haus[master]:
+                master_count+=1
+
+        if master_count==0:
+            update.message.reply_text("ADAFRUID REFRESHED - LOCKDOWN MODE ENABLED")
+            enable_lockdown()
+        else:
+            update.message.reply_text("ADAFRUID REFRESHED - LOCKDOWN MODE DISABLED")
+            disable_lockdown()
 
 def telegram_enable_adafruit_io(bot, update):
     global adafruitio_enabled, adafruitio_adm_down
@@ -331,6 +367,7 @@ if __name__ == "__main__":
         except:
             adafruitio_enabled = False
             adafruitio_adm_down = True
+        adafruit_lastconnect = 0
 
         masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
         masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
@@ -385,9 +422,10 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
         updater.dispatcher.add_handler(CommandHandler('showscheduler', telegram_show_scheduler))
         updater.dispatcher.add_handler(CommandHandler('debugadafruitio', telegram_debug_adafruit_io))
-        updater.dispatcher.add_handler(CommandHandler('enableafruitio', telegram_enable_adafruit_io))
-        updater.dispatcher.add_handler(CommandHandler('disableafruitio', telegram_disable_adafruit_io))
-        updater.dispatcher.add_handler(CommandHandler('statusafruitio', telegram_status_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('enableadafruitio', telegram_enable_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('disableadafruitio', telegram_disable_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('statusadafruitio', telegram_status_adafruit_io))
+        updater.dispatcher.add_handler(CommandHandler('refreshadafruitio', telegram_refresh_adafruit_io))
 
         updater.start_polling()
 
