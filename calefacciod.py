@@ -96,7 +96,7 @@ def run_adafruitio_task():
     global adafruitio_username, adafruitio_key, masters_inda_haus, adafruit_lastconnect
 
     timestamp_now = datetime.timestamp(datetime.now())
-    if(timestamp_now-adafruit_lastconnect<300)
+    if((timestamp_now-adafruit_lastconnect) < 300):
         return
 
     adafruit_lastconnect = timestamp_now
