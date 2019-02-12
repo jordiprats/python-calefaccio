@@ -95,7 +95,7 @@ def adafruitio_message(client, feed_id, payload):
 def run_adafruitio_task():
     global adafruitio_username, adafruitio_key, masters_inda_haus, adafruit_lastconnect
 
-    timestamp_now = datetime.timestamp(datetime.now())
+    timestamp_now = datetime.datetime.timestamp(datetime.now())
     if((timestamp_now-adafruit_lastconnect) < 300):
         return
 
