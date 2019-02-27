@@ -17,13 +17,19 @@ echo 0 > /sys/class/gpio/gpio26/value
 [bot]
 
 token = TOKEN_HERE
-masters-id-telegram = [ "111" ]
-masters-groups-id-telegram = [ "-222" ]
+masters-id-telegram = [ "111", "222" ]
+masters-groups-id-telegram = [ "-333" ]
+debug = false
+
+[adafruitio]
+
+username = USERNAME
+key = KEY
 
 [schedule]
 
-daily_start = "05:00"
-daily_stop = "00:00"
+daily_start = "04:15"
+daily_stop = "22:30"
 ```
 
 ## comandes
