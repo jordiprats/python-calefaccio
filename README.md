@@ -33,7 +33,7 @@ daily_stop = "22:30"
 ```
 
 ## comandes
-
+```
 start - inicia bot
 status - mostra estat calefacció
 on - arranca calefacció
@@ -47,3 +47,4 @@ enableadafruitio - habilita adafruit
 disableadafruitio - deshabilita adafruit
 statusadafruitio - estat adafruit
 refreshadafruitio - força refresh adafruit
+```
