@@ -217,7 +217,7 @@ def telegram_status_adafruit_io(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     if adafruitio_adm_down:
-        update.message.reply_text("Adafruit IO administratively DOWN")
+        update.message.reply_text("Adafruit IO DOWN - please check credentials")
     else:
         if adafruitio_enabled:
             update.message.reply_text("Adafruit IO ONLINE")
