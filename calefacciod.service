@@ -1,5 +1,5 @@
 [Unit]
-Description=Central heating of the colony
+Description=Central heating system of the colony
 
 [Service]
 ExecStart=/usr/bin/python /opt/python-calefaccio/calefacciod.py /opt/python-calefaccio/calefacciod.config
