@@ -38,6 +38,9 @@ start - inicia bot
 status - mostra estat calefacció
 on - arranca calefacció
 off - para calefacció
+enablelockdown - activa programació
+disablelockdown - desactiva programació
+statuslockdown - estat del sistema
 enablescheduler - habilita aturada/arranc horari
 disablescheduler - deshabilita aturada/arranc horari
 statusscheduler - mostra estat aturada/arranc horari

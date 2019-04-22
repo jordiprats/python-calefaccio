@@ -28,6 +28,12 @@ def disable_lockdown():
 def is_locked_down():
     return calefaccio.status()=="off" and not enabled_scheduler
 
+def status_lockdown():
+    if is_locked_down():
+        return "LOCKDOWN ENABLED"
+    else:
+        return "LOCKDOWN DISABLED"
+
 def get_scheduler_status():
     global enabled_scheduler
     if enabled_scheduler:
@@ -334,6 +340,32 @@ def telegram_status_scheduler(bot, update):
         return
     update.message.reply_text("SHEDULER STATUS: "+get_scheduler_status(), use_aliases=True)
 
+def telegram_enable_lockdown(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    enable_lockdown()
+    update.message.reply_text(status_lockdown(), use_aliases=True)
+
+def telegram_disable_lockdown(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    disable_lockdown()
+    update.message.reply_text(status_lockdown(), use_aliases=True)
+
+def telegram_status_lockdown(bot, update):
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+    update.message.reply_text(status_lockdown(), use_aliases=True)
+
 BOT_TOKEN = ""
 circuitbreaker_status = True
 enabled_scheduler = True
@@ -417,6 +449,9 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('status', telegram_show_status))
         updater.dispatcher.add_handler(CommandHandler('on', telegram_on))
         updater.dispatcher.add_handler(CommandHandler('off', telegram_off))
+        updater.dispatcher.add_handler(CommandHandler('enablelockdown', telegram_enable_lockdown))
+        updater.dispatcher.add_handler(CommandHandler('disablelockdown', telegram_disable_lockdown))
+        updater.dispatcher.add_handler(CommandHandler('statuslockdown', telegram_status_lockdown))
         updater.dispatcher.add_handler(CommandHandler('enablescheduler', telegram_enable_scheduler))
         updater.dispatcher.add_handler(CommandHandler('disablescheduler', telegram_disable_scheduler))
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
