@@ -10,6 +10,10 @@
  * [demo esp01 + temperatura](https://github.com/abflower/homeass-temp_sens/blob/master/ds_sensor.py)
  * [MQTT Server Using Raspberry Pi](https://appcodelabs.com/introduction-to-iot-build-an-mqtt-server-using-raspberry-pi)
 
+## TODO
+
+* integració home assistant REST: https://www.home-assistant.io/integrations/switch.rest/
+
 ## calefacciod
 
 ### base setup
