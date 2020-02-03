@@ -3,3 +3,4 @@ rpi/
 MANIFEST
 dist/*
 *.config
+*.ino.generic.bin
