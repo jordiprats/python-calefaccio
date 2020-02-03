@@ -1,5 +1,7 @@
 python-telegram-bot
+flask-restful
 adafruit-io
 schedule
 RPi.GPIO
+flask
 pid

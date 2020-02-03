@@ -14,7 +14,7 @@
 
 * integració home assistant REST: https://www.home-assistant.io/integrations/switch.rest/
 
-## calefacciod
+## telegram bot - calefacciod
 
 ### base setup
 
@@ -28,6 +28,8 @@ sleep 1
 echo 0 > /sys/class/gpio/gpio26/value
 ```
 ### calefacciod.config
+
+Config telegram bot
 
 ```
 [bot]
