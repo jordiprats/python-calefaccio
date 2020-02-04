@@ -24,4 +24,6 @@ class Calefaccio(Resource):
 api.add_resource(Calefaccio, '/calefaccio')
 
 if __name__ == '__main__':
-     app.run(host='0.0.0.0', port='5002')
+    calefaccio.init()
+    time.sleep(1)
+    app.run(host='0.0.0.0', port='5002')
