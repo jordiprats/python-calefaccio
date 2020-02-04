@@ -1,18 +1,23 @@
 # python-calefaccio
 
-## sensor temperatura
+## restapi switch - restapid
 
- * [esp-01s + DHT11](https://www.amazon.es/gp/product/B0793M8LXK/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1)
- * [Connect the ESP8266 WiFi Chip to your Raspberry Pi](https://openhomeautomation.net/connect-esp8266-raspberry-pi)
- * [programar esp01](https://programarfacil.com/podcast/como-configurar-esp01-wifi-esp8266/)
- * [programar esp01 amb raspberry](https://blog.3d-logic.com/2017/12/01/using-raspberry-pi-to-flash-esp8266/)
- * [Temperature Sensor with ESP8266-01 And DS18B20](https://www.hackster.io/alessandro-bellafiore/temperature-sensor-with-esp8266-01-and-ds18b20-6a0897)
- * [demo esp01 + temperatura](https://github.com/abflower/homeass-temp_sens/blob/master/ds_sensor.py)
- * [MQTT Server Using Raspberry Pi](https://appcodelabs.com/introduction-to-iot-build-an-mqtt-server-using-raspberry-pi)
+### restapid
 
-## TODO
+### Home assistant config
 
-* integració home assistant REST: https://www.home-assistant.io/integrations/switch.rest/
+```
+switch:
+  - platform: rest
+    name: calefaccio
+    resource: http://1.2.3.4:5002/calefaccio
+    body_on: '{"active": "true"}'
+    body_off: '{"active": "false"}'
+    is_on_template: '{{ value_json.is_active }}'
+    headers:
+      Content-Type: application/json
+    verify_ssl: false
+```
 
 ## telegram bot - calefacciod
 
