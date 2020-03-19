@@ -1,0 +1,16 @@
+[Unit]
+Description=Central heating system of the colony REST API
+
+[Service]
+ExecStart=/usr/bin/python /opt/python-calefaccio/restapid.py
+Restart=always
+User=root
+Group=root
+PermissionsStartOnly=false
+PrivateTmp=no
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
+
