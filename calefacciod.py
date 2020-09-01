@@ -86,6 +86,16 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(1)
 
+def telegram_getseason(bot, update):
+    global season
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+
+    update.message.reply_text("Current season: "+season)
+
 def telegram_show_scheduler(bot, update):
     user_id = update.message.from_user.id
     chat_id = update.message.chat_id
@@ -292,6 +302,7 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('disablescheduler', telegram_disable_scheduler))
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
         updater.dispatcher.add_handler(CommandHandler('showscheduler', telegram_show_scheduler))
+        updater.dispatcher.add_handler(CommandHandler('getseason', telegram_getseason))
 
         updater.start_polling()
 
