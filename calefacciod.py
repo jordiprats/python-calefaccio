@@ -64,7 +64,7 @@ def scheduled_get_season():
 
                 if season_candidate:
                     if not season or season != season_candidate:
-                        telegram_motify("set season to "+season_candidate)
+                        telegram_motify("INFO - set season to "+season_candidate)
                     season = season_candidate
 
                     if not enabled_lockdown:
@@ -76,15 +76,16 @@ def scheduled_get_season():
                             if enabled_scheduler:
                                 telegram_motify("AUTOMATIC ACTION - DISABLED SCHEDULER due to season")
                             enabled_scheduler = False
+                return True
                 else:
                     continue
             except SomeSpecificException:
                 time.sleep(i*3)
                 continue
-            break
     telegram_motify("!! WARNING !!")
     telegram_motify("UNABLE TO GET SEASON")
     telegram_motify("!! WARNING !!")
+    return False
 
 def run_scheduler():
     while True:
