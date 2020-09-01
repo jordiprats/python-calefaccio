@@ -268,7 +268,7 @@ if __name__ == "__main__":
 
         calefaccio.init()
         time.sleep(1)
-        scheduled_stop_calefaccio()
+        calefaccio.off()
 
         try:
             array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
