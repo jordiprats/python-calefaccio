@@ -259,6 +259,16 @@ if __name__ == "__main__":
         masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
         masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
 
+        #
+        # telegram
+        #
+
+        updater = Updater(token=BOT_TOKEN)
+
+        calefaccio.init()
+        time.sleep(1)
+        scheduled_stop_calefaccio()
+
         try:
             array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
             for stop_calefaccio_at in array_schedules_stop_calefaccio:
@@ -281,16 +291,6 @@ if __name__ == "__main__":
             schedule_active_on = None
             enabled_scheduler = True
             telegram_motify("season detection disabled")
-
-        #
-        # telegram
-        #
-
-        updater = Updater(token=BOT_TOKEN)
-
-        calefaccio.init()
-        time.sleep(1)
-        scheduled_stop_calefaccio()
 
         scheduler_thread = Thread(target = run_scheduler, args = ())
         scheduler_thread.daemon = True
