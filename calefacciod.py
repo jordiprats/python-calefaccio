@@ -56,7 +56,7 @@ def scheduled_stop_calefaccio():
         telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
 
 def scheduled_get_season():
-    global season
+    global season, enabled_lockdown, enabled_scheduler
     for i in range(0,10):
         while True:
             try:
@@ -65,7 +65,7 @@ def scheduled_get_season():
                 if season_candidate:
                     season = season_candidate
 
-                    if not is_locked_down():
+                    if not enabled_lockdown:
                         if season == schedule_active_on:
                             if not enabled_scheduler:
                                 telegram_motify("AUTOMATIC ACTION - ENABLED SCHEDULER due to season")
@@ -80,6 +80,9 @@ def scheduled_get_season():
                 time.sleep(i*3)
                 continue
             break
+    telegram_motify("!! WARNING !!")
+    telegram_motify("UNABLE TO GET SEASON")
+    telegram_motify("!! WARNING !!")
 
 def run_scheduler():
     while True:
