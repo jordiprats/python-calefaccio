@@ -76,7 +76,7 @@ def scheduled_get_season():
                             if enabled_scheduler:
                                 telegram_motify("AUTOMATIC ACTION - DISABLED SCHEDULER due to season")
                             enabled_scheduler = False
-                return True
+                    return True
                 else:
                     continue
             except SomeSpecificException:
