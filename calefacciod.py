@@ -63,6 +63,8 @@ def scheduled_get_season():
                 season_candidate = ntpseason.getNTPseason()
 
                 if season_candidate:
+                    if not season or season != season_candidate:
+                        telegram_motify("set season to "+season_candidate)
                     season = season_candidate
 
                     if not enabled_lockdown:
@@ -228,7 +230,7 @@ def telegram_status_lockdown(bot, update):
 
 BOT_TOKEN = ""
 circuitbreaker_status = True
-enabled_scheduler = True
+enabled_scheduler = False
 enabled_lockdown = False
 masters_inda_haus = {}
 season = None
@@ -277,6 +279,8 @@ if __name__ == "__main__":
             schedule.every().day.do(scheduled_get_season)
         except:
             schedule_active_on = None
+            enabled_scheduler = True
+            telegram_motify("season detection disabled")
 
         #
         # telegram
