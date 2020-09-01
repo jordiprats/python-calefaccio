@@ -39,20 +39,17 @@ Config telegram bot
 ```
 [bot]
 
-token = TOKEN_HERE
-masters-id-telegram = [ "111", "222" ]
-masters-groups-id-telegram = [ "-333" ]
+token = TELEGRAM_TOKEN
+masters-id-telegram = [ "MASTER1", "MASTER2" ]
+masters-groups-id-telegram = [ "GROUP_ID" ]
 debug = false
-
-[adafruitio]
-
-username = USERNAME
-key = KEY
 
 [schedule]
 
+active_on = winter
+
 daily_start = "04:15"
-daily_stop = "22:30"
+daily_stop = "08:00"
 ```
 
 ### comandes
