@@ -4,6 +4,7 @@ import json
 import logging
 import schedule
 import telegram
+import ntpseason
 import calefaccio
 import datetime, time
 
@@ -15,17 +16,19 @@ from telegram.ext import Updater, CommandHandler
 timeformat = '%Y-%m-%d %H:%M:%S'
 
 def enable_lockdown():
-    global enabled_scheduler
+    global enabled_scheduler, enabled_lockdown
     enabled_scheduler = False
+    enabled_lockdown = False
     calefaccio.off()
 
 def disable_lockdown():
-    global enabled_scheduler
+    global enabled_scheduler, enabled_lockdown
     enabled_scheduler = True
-    calefaccio.on()
+    enabled_lockdown = True
 
 def is_locked_down():
-    return calefaccio.status()=="off" and not enabled_scheduler
+    global enabled_lockdown
+    return enabled_lockdown
 
 def status_lockdown():
     if is_locked_down():
@@ -52,6 +55,32 @@ def scheduled_stop_calefaccio():
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
         telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
 
+def scheduled_get_season():
+    global season
+    for i in range(0,10):
+        while True:
+            try:
+                season_candidate = ntpseason.getNTPseason()
+
+                if season_candidate:
+                    season = season_candidate
+
+                    if not is_locked_down():
+                        if season == schedule_active_on:
+                            if not enabled_scheduler:
+                                telegram_motify("AUTOMATIC ACTION - ENABLED SCHEDULER due to season")
+                            enabled_scheduler = True
+                        else:
+                            if enabled_scheduler:
+                                telegram_motify("AUTOMATIC ACTION - DISABLED SCHEDULER due to season")
+                            enabled_scheduler = False
+                else:
+                    continue
+            except SomeSpecificException:
+                time.sleep(i*3)
+                continue
+            break
+
 def run_scheduler():
     while True:
         schedule.run_pending()
@@ -63,6 +92,8 @@ def telegram_show_scheduler(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
+
+    update.message.reply_text("active on: "+schedule_active_on)
 
     try:
         array_schedules_start_calefaccio = json.loads(config.get('bot','daily_start'))
@@ -185,7 +216,10 @@ def telegram_status_lockdown(bot, update):
 BOT_TOKEN = ""
 circuitbreaker_status = True
 enabled_scheduler = True
+enabled_lockdown = False
 masters_inda_haus = {}
+season = None
+schedule_active_on = None
 
 # main
 if __name__ == "__main__":
@@ -224,6 +258,12 @@ if __name__ == "__main__":
         except:
             schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
 
+        try:
+            schedule_active_on = config.get('schedule', 'active_on').strip('"').strip("'").strip()
+            scheduled_get_season()
+            schedule.every().day.do(scheduled_get_season)
+        except:
+            schedule_active_on = None
 
         #
         # telegram
@@ -233,7 +273,7 @@ if __name__ == "__main__":
 
         calefaccio.init()
         time.sleep(1)
-        scheduled_start_calefaccio()
+        scheduled_stop_calefaccio()
 
         scheduler_thread = Thread(target = run_scheduler, args = ())
         scheduler_thread.daemon = True

@@ -1,7 +1,8 @@
 from socket import AF_INET, SOCK_DGRAM
 import sys
 import socket
-import struct, time
+import struct
+import datetime
 import timeout_decorator
 
 @timeout_decorator.timeout(5, use_signals=False)
@@ -14,7 +15,6 @@ def getNTPseason(host = "pool.ntp.org"):
     # reference time (in seconds since 1900-01-01 00:00:00)
     TIME1970 = 2208988800 # 1970-01-01 00:00:00
 
-
     try:
         # connect to server
         client = socket.socket( AF_INET, SOCK_DGRAM)
@@ -23,12 +23,20 @@ def getNTPseason(host = "pool.ntp.org"):
 
         t = struct.unpack( "!12I", msg )[10]
         t -= TIME1970
-        ntp_time = time.ctime(t).replace("  "," ")
+        # print(t)
 
-        print(ntp_time.month)
-    except:
+        month = int(datetime.datetime.fromtimestamp(t).strftime('%m'))
+        # print(month)
+
+        # definim estiu de abril a octubre
+        if month >= 4 and month <= 10:
+            return "summer"
+        else:
+            return "winter"
+
+    except Exception as e:
+        print(e)
         return None
-
 
 if __name__ == "__main__":
     try:
