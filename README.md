@@ -34,7 +34,7 @@ daily_start = "04:15"
 daily_stop = "08:00"
 ```
 
-### comandes
+### list of command for the BotFather
 ```
 start - inicia bot
 status - mostra estat calefacció
