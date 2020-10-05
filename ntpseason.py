@@ -28,8 +28,8 @@ def getNTPseason(host = "pool.ntp.org"):
         month = int(datetime.datetime.fromtimestamp(t).strftime('%m'))
         # print(month)
 
-        # definim estiu de abril a octubre
-        if month >= 4 and month <= 10:
+        # definim estiu de abril a setembre
+        if month >= 4 and month < 10:
             return "summer"
         else:
             return "winter"
