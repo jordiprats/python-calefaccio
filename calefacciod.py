@@ -271,14 +271,14 @@ if __name__ == "__main__":
         calefaccio.off()
 
         try:
-            array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
+            array_schedules_stop_calefaccio = json.loads(config.get('schedule','daily_stop'))
             for stop_calefaccio_at in array_schedules_stop_calefaccio:
                 schedule.every().day.at(stop_calefaccio_at).do(scheduled_stop_calefaccio)
         except:
             schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
 
         try:
-            array_schedules_start_calefaccio = json.loads(config.get('bot','daily_start'))
+            array_schedules_start_calefaccio = json.loads(config.get('schedule','daily_start'))
             for start_calefaccio_at in array_schedules_start_calefaccio:
                 schedule.every().day.at(start_calefaccio_at).do(scheduled_start_calefaccio)
         except:
