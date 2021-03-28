@@ -249,14 +249,14 @@ def telegram_show_scheduler(bot, update):
         return
 
     try:
-        array_schedules_start_calefaccio = json.loads(config.get('bot','daily_start'))
+        array_schedules_start_calefaccio = json.loads(config.get('schedule','daily_start'))
         for start_calefaccio_at in array_schedules_start_calefaccio:
             update.message.reply_text("daily start at: "+start_calefaccio_at)
     except:
         update.message.reply_text("daily start at: "+config.get('schedule', 'daily_start').strip('"').strip("'").strip())
 
     try:
-        array_schedules_stop_calefaccio = json.loads(config.get('bot','daily_stop'))
+        array_schedules_stop_calefaccio = json.loads(config.get('schedule','daily_stop'))
         for stop_calefaccio_at in array_schedules_stop_calefaccio:
             update.message.reply_text("daily stop at: "+stop_calefaccio_at)
     except:
