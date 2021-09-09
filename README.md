@@ -48,6 +48,7 @@ disablescheduler - deshabilita aturada/arranc horari
 statusscheduler - mostra estat aturada/arranc horari
 showscheduler - mostra programació horaria
 getseason - get current season
+getpricing - get current pricing
 ```
 
 ## restapi switch - restapid
