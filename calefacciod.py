@@ -168,7 +168,8 @@ def telegram_show_status(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
-    send_current_price_tag(force=True)
+    if calefaccio.status() == "on":
+        send_current_price_tag(force=True)
 
 def telegram_on(bot, update):
     global circuitbreaker_status
