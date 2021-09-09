@@ -48,6 +48,7 @@ def scheduled_start_calefaccio():
         calefaccio.on()
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
         telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
+        telegram_motify(ntpseason.getScammersPriceTag())
 
 def scheduled_stop_calefaccio():
     if enabled_scheduler:
@@ -151,6 +152,7 @@ def telegram_show_status(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
+    telegram_motify(ntpseason.getScammersPriceTag())
 
 def telegram_on(bot, update):
     global circuitbreaker_status
@@ -162,6 +164,7 @@ def telegram_on(bot, update):
     circuitbreaker_status = True
     calefaccio.on()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
+    telegram_motify(ntpseason.getScammersPriceTag())
 
 def telegram_off(bot, update):
     global circuitbreaker_status
@@ -292,6 +295,8 @@ if __name__ == "__main__":
             schedule_active_on = None
             enabled_scheduler = True
             telegram_motify("season detection disabled")
+
+        # schedule.every(10).minutes.do(notify_price_tag)
 
         scheduler_thread = Thread(target = run_scheduler, args = ())
         scheduler_thread.daemon = True
