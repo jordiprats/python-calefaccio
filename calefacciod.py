@@ -117,7 +117,15 @@ def telegram_getseason(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
 
-    update.message.reply_text("Current season: "+season)
+def telegram_getpricing(bot, update):
+    global season
+    user_id = update.message.from_user.id
+    chat_id = update.message.chat_id
+    if not telegram_preauth(user_id, chat_id):
+        update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
+        return
+
+    send_current_price_tag(dryrun=True)
 
 def telegram_show_scheduler(bot, update):
     user_id = update.message.from_user.id
@@ -333,6 +341,7 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('statusscheduler', telegram_status_scheduler))
         updater.dispatcher.add_handler(CommandHandler('showscheduler', telegram_show_scheduler))
         updater.dispatcher.add_handler(CommandHandler('getseason', telegram_getseason))
+        updater.dispatcher.add_handler(CommandHandler('getpricing', telegram_getpricing))
 
         updater.start_polling()
 
