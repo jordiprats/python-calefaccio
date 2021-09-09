@@ -15,6 +15,22 @@ from telegram.ext import Updater, CommandHandler
 
 timeformat = '%Y-%m-%d %H:%M:%S'
 
+previous_pricetag = None
+
+def send_current_price_tag(force=False, dryrun=False):
+    global previous_pricetag
+    if force:
+        previous_pricetag = ntpseason.getScammersPriceTag()
+        telegram_motify(previous_pricetag)
+    elif dryrun:
+        telegram_motify(ntpseason.getScammersPriceTag())
+    else:
+        if calefaccio.status() == "on":
+            current_pricetag = ntpseason.getScammersPriceTag()
+            if previous_pricetag != current_pricetag:
+                previous_pricetag = current_pricetag
+                telegram_motify(current_pricetag)
+
 def enable_lockdown():
     global enabled_scheduler, enabled_lockdown
     enabled_scheduler = False
@@ -48,7 +64,7 @@ def scheduled_start_calefaccio():
         calefaccio.on()
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
         telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
-        telegram_motify(ntpseason.getScammersPriceTag())
+        send_current_price_tag(force=True)
 
 def scheduled_stop_calefaccio():
     if enabled_scheduler:
@@ -80,7 +96,7 @@ def scheduled_get_season():
                     return True
                 else:
                     continue
-            except SomeSpecificException:
+            except:
                 time.sleep(i*3)
                 continue
     telegram_motify("!! WARNING !!")
@@ -152,7 +168,7 @@ def telegram_show_status(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
-    telegram_motify(ntpseason.getScammersPriceTag())
+    send_current_price_tag(force=True)
 
 def telegram_on(bot, update):
     global circuitbreaker_status
@@ -164,7 +180,7 @@ def telegram_on(bot, update):
     circuitbreaker_status = True
     calefaccio.on()
     update.message.reply_text("STATUS: "+calefaccio.status(), use_aliases=True)
-    telegram_motify(ntpseason.getScammersPriceTag())
+    send_current_price_tag(force=True)
 
 def telegram_off(bot, update):
     global circuitbreaker_status
@@ -296,7 +312,7 @@ if __name__ == "__main__":
             enabled_scheduler = True
             telegram_motify("season detection disabled")
 
-        # schedule.every(10).minutes.do(notify_price_tag)
+        schedule.every(10).minutes.do(send_current_price_tag)
 
         scheduler_thread = Thread(target = run_scheduler, args = ())
         scheduler_thread.daemon = True
