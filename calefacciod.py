@@ -72,6 +72,10 @@ def scheduled_stop_calefaccio():
         logging.debug("*X "+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)+" set to "+calefaccio.status())
         telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
 
+def report_pricing_while_on():
+    if True or calefaccio.status() == "on":
+        send_current_price_tag(force=True)
+
 def scheduled_get_season():
     global season, enabled_lockdown, enabled_scheduler
     for i in range(0,10):
@@ -321,7 +325,7 @@ if __name__ == "__main__":
             enabled_scheduler = True
             telegram_motify("season detection disabled")
 
-        schedule.every(10).minutes.do(send_current_price_tag)
+        schedule.every(10).minutes.do(report_pricing_while_on)
 
         scheduler_thread = Thread(target = run_scheduler, args = ())
         scheduler_thread.daemon = True
