@@ -73,8 +73,11 @@ def scheduled_stop_calefaccio():
         telegram_motify("AUTOMATIC ACTION - STATUS: "+calefaccio.status())
 
 def report_pricing_while_on():
+    global previous_pricetag
     if calefaccio.status() == "on":
-        send_current_price_tag(force=True)
+        send_current_price_tag(force=False, dryrun=False)
+    else:
+        previous_pricetag = None
 
 def scheduled_get_season():
     global season, enabled_lockdown, enabled_scheduler
