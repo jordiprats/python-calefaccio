@@ -123,6 +123,9 @@ def telegram_getseason(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
+    else:
+        if season:
+            update.message.reply_text("current season is set to: "+season)
 
 def telegram_getpricing(bot, update):
     global season
@@ -131,7 +134,6 @@ def telegram_getpricing(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
-
     send_current_price_tag(dryrun=True)
 
 def telegram_show_scheduler(bot, update):
