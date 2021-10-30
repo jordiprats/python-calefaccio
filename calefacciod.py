@@ -168,7 +168,7 @@ def telegram_show_scheduler(bot, update):
         all_jobs = schedule.get_jobs()
         logging.debug(str(all_jobs))
     except Exception as e:
-        logging.debug(str(e))
+        logging.debug(">>>>>> EXCEPTION: "+str(e))
 
 def telegram_motify(str):
     global masters_groups_id_telegram, updater
@@ -324,7 +324,7 @@ if __name__ == "__main__":
                 schedule.every().day.at(stop_calefaccio_at.strip()).do(scheduled_stop_calefaccio)
                 telegram_motify("scheduled stop at "+stop_calefaccio_at.strip())
         except Exception as e:
-            logging.debug(str(e))
+            logging.debug(">>>>>> EXCEPTION: "+str(e))
             schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
             telegram_motify("scheduled stop at "+config.get('schedule', 'daily_stop').strip('"').strip("'").strip())
 
@@ -334,7 +334,7 @@ if __name__ == "__main__":
                 schedule.every().day.at(start_calefaccio_at.strip()).do(scheduled_start_calefaccio)
                 telegram_motify("scheduled start at "+start_calefaccio_at.strip())
         except Exception as e:
-            logging.debug(str(e))
+            logging.debug(">>>>>> EXCEPTION: "+str(e))
             schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
             telegram_motify("scheduled start at "+config.get('schedule', 'daily_start').strip('"').strip("'").strip())
 
@@ -343,7 +343,7 @@ if __name__ == "__main__":
             scheduled_get_season()
             schedule.every().day.do(scheduled_get_season)
         except Exception as e:
-            logging.debug(str(e))
+            logging.debug(">>>>>> EXCEPTION: "+str(e))
             schedule_active_on = None
             enabled_scheduler = True
             telegram_motify("season detection disabled")
