@@ -113,8 +113,13 @@ def scheduled_get_season():
 
 def run_scheduler():
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        idle_sec = 1
+        try:
+            schedule.run_pending()
+            idle_sec = schedule.idle_seconds()
+        except:
+            pass
+        time.sleep(idle_sec)
 
 def telegram_getseason(bot, update):
     global season
@@ -142,6 +147,10 @@ def telegram_show_scheduler(bot, update):
     if not telegram_preauth(user_id, chat_id):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
+
+    jobs = schedule.get_jobs()
+    print(str(jobs))
+    # update.message.reply_text("active on: "+str(jobs))
 
     update.message.reply_text("active on: "+schedule_active_on)
 
