@@ -164,11 +164,12 @@ def telegram_show_scheduler(bot, update):
     except:
         update.message.reply_text("daily stop at: /"+config.get('schedule', 'daily_stop').strip('"').strip("'").strip()+"/")
 
-    try:
-        all_jobs = schedule.get_jobs()
-        logging.debug(str(all_jobs))
-    except Exception as e:
-        logging.debug(">>>>>> EXCEPTION: "+str(e))
+    # python 3
+    # try:
+    #     all_jobs = schedule.get_jobs()
+    #     logging.debug(str(all_jobs))
+    # except Exception as e:
+    #     logging.debug(">>>>>> EXCEPTION: "+str(e))
 
 def telegram_motify(str):
     global masters_groups_id_telegram, updater
