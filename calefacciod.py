@@ -310,22 +310,29 @@ if __name__ == "__main__":
         try:
             array_schedules_stop_calefaccio = json.loads(config.get('schedule','daily_stop'))
             for stop_calefaccio_at in array_schedules_stop_calefaccio:
-                schedule.every().day.at(stop_calefaccio_at).do(scheduled_stop_calefaccio)
-        except:
+                schedule.every().day.at(stop_calefaccio_at.strip()).do(scheduled_stop_calefaccio)
+                telegram_motify("scheduled stop at "+stop_calefaccio_at.strip())
+        except Exception as e:
+            print(str(e))
             schedule.every().day.at(config.get('schedule', 'daily_stop').strip('"').strip("'").strip()).do(scheduled_stop_calefaccio)
+            telegram_motify("scheduled stop at "+config.get('schedule', 'daily_stop').strip('"').strip("'").strip())
 
         try:
             array_schedules_start_calefaccio = json.loads(config.get('schedule','daily_start'))
             for start_calefaccio_at in array_schedules_start_calefaccio:
-                schedule.every().day.at(start_calefaccio_at).do(scheduled_start_calefaccio)
-        except:
+                schedule.every().day.at(start_calefaccio_at.strip()).do(scheduled_start_calefaccio)
+                telegram_motify("scheduled start at "+start_calefaccio_at.strip())
+        except Exception as e:
+            print(str(e))
             schedule.every().day.at(config.get('schedule', 'daily_start').strip('"').strip("'").strip()).do(scheduled_start_calefaccio)
+            telegram_motify("scheduled start at "+config.get('schedule', 'daily_start').strip('"').strip("'").strip())
 
         try:
             schedule_active_on = config.get('schedule', 'active_on').strip('"').strip("'").strip()
             scheduled_get_season()
             schedule.every().day.do(scheduled_get_season)
-        except:
+        except Exception as e:
+            print(str(e))
             schedule_active_on = None
             enabled_scheduler = True
             telegram_motify("season detection disabled")
