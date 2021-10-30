@@ -150,7 +150,7 @@ def telegram_show_scheduler(bot, update):
 
     jobs = schedule.get_jobs()
     print(str(jobs))
-    # update.message.reply_text("active on: "+str(jobs))
+    update.message.reply_text("active on: "+str(jobs))
 
     update.message.reply_text("active on: "+schedule_active_on)
 
