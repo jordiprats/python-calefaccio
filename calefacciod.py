@@ -148,10 +148,6 @@ def telegram_show_scheduler(bot, update):
         update.message.reply_text("I'm afraid I can't do that."+str(chat_id))
         return
 
-    jobs = schedule.get_jobs()
-    print(str(jobs))
-    update.message.reply_text("active on: "+str(jobs))
-
     update.message.reply_text("active on: "+schedule_active_on)
 
     try:
@@ -351,6 +347,8 @@ if __name__ == "__main__":
         scheduler_thread = Thread(target = run_scheduler, args = ())
         scheduler_thread.daemon = True
         scheduler_thread.start()
+
+        telegram_motify("== scheduler configured ==")
 
         dp = updater.dispatcher
 
