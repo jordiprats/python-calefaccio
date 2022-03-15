@@ -10,7 +10,7 @@ import datetime, time
 
 from pid import PidFile
 from threading import Thread
-from ConfigParser import SafeConfigParser
+from configparser import SafeConfigParser
 from telegram.ext import Updater, CommandHandler
 
 timeformat = '%Y-%m-%d %H:%M:%S'
