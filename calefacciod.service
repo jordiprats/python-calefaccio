@@ -2,7 +2,7 @@
 Description=Central heating system of the colony
 
 [Service]
-ExecStart=/usr/bin/python /opt/python-calefaccio/calefacciod.py /opt/python-calefaccio/calefacciod.config
+ExecStart=/usr/local/bin/python3.6 /opt/python-calefaccio/calefacciod.py /opt/python-calefaccio/calefacciod.config
 PIDFile=/var/run/calefacciod.pid
 Restart=always
 User=root
