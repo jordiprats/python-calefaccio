@@ -3,6 +3,7 @@
 token = TELEGRAM_TOKEN
 masters-id-telegram = [ "MASTER1", "MASTER2" ]
 masters-groups-id-telegram = [ "GROUP_ID" ]
+winter-months = [ 11, 12, 1, 2, 3, 4 ]
 debug = false
 
 [schedule]
