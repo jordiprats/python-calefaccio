@@ -84,7 +84,7 @@ def scheduled_get_season():
   for i in range(0,10):
     while True:
       try:
-        season_candidate = ntpseason.getNTPseason()
+        season_candidate = ntpseason.getNTPseason(winter_months=winter_months)
 
         if season_candidate:
           if not season or season != season_candidate:
@@ -285,6 +285,7 @@ enabled_lockdown = False
 masters_inda_haus = {}
 season = None
 schedule_active_on = None
+winter_months = []
 
 # main
 if __name__ == "__main__":
@@ -308,6 +309,11 @@ if __name__ == "__main__":
 
     masters_id_telegram = json.loads(config.get('bot','masters-id-telegram'))
     masters_groups_id_telegram = json.loads(config.get('bot','masters-groups-id-telegram'))
+
+    try:
+      winter_months = json.loads(config.get('bot','winter-months'))
+    except:
+      winter_months = [ 11, 12, 1, 2, 3, 4 ]
 
     #
     # telegram

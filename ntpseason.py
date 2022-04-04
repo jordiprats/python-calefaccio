@@ -8,7 +8,7 @@ import socket
 import sys
 
 @timeout_decorator.timeout(5, use_signals=False)
-def getNTPseason(host = "pool.ntp.org"):
+def getNTPseason(host = "pool.ntp.org", winter_months = [11, 12, 1, 2, 3]):
     port = 123
     buf = 1024
     address = (host,port)
@@ -30,8 +30,7 @@ def getNTPseason(host = "pool.ntp.org"):
         month = int(datetime.datetime.fromtimestamp(t).strftime('%m'))
         # print(month)
 
-        # definim estiu de abril a setembre
-        if month >= 4 and month < 10:
+        if month not in winter_months:
             return "summer"
         else:
             return "winter"
