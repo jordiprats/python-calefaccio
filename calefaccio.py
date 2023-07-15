@@ -20,7 +20,7 @@ def init():
             GPIO.setup(26, GPIO.OUT)
             GPIO.output(26, GPIO.LOW)
 
-def on():
+def off():
     global status_bool
     global sample_mode
     with mutex:
@@ -29,7 +29,7 @@ def on():
         else:
             status_bool=False
 
-def off():
+def on():
     global status_bool
     global sample_mode
     with mutex:
@@ -45,6 +45,6 @@ def status():
         if not sample_mode:
             status_bool=GPIO.input(26)
         if status_bool:
-            return "off"
-        else:
             return "on"
+        else:
+            return "offs"
