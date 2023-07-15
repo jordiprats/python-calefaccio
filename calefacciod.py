@@ -326,6 +326,12 @@ if __name__ == "__main__":
     calefaccio.off()
 
     try:
+      telegram_motify("bot startup")
+    except:
+      time.sleep(10)
+      sys.exit(1)
+
+    try:
       array_schedules_stop_calefaccio = json.loads(config.get('schedule','daily_stop'))
       for stop_calefaccio_at in array_schedules_stop_calefaccio:
         schedule.every().day.at(stop_calefaccio_at.strip()).do(scheduled_stop_calefaccio)
