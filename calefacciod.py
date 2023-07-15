@@ -353,6 +353,7 @@ if __name__ == "__main__":
 
     try:
       schedule_active_on = config.get('schedule', 'active_on').strip('"').strip("'").strip()
+      telegram_motify("schedule active on: "+schedule_active_on)
       scheduled_get_season()
       schedule.every().day.do(scheduled_get_season)
     except Exception as e:
