@@ -47,4 +47,4 @@ def status():
         if status_bool:
             return "on"
         else:
-            return "offs"
+            return "off"
