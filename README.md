@@ -68,8 +68,14 @@ switch:
     resource: http://1.2.3.4:5002/calefaccio
     body_on: '{"active": "true"}'
     body_off: '{"active": "false"}'
-    is_on_template: '{{ value_json.is_active }}'
+    is_on_template: "{{ value_json.is_active }}"
     headers:
       Content-Type: application/json
     verify_ssl: false
+
+sensor:
+  - platform: rest
+    name: calefaccio
+    resource: http://1.2.3.4:5002/calefaccio
+    value_template: "{{ value_json.is_active }}"
 ```
